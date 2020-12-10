@@ -1,16 +1,14 @@
 package com.aeon.ams.config.auth;
 
+import com.aeon.ams.model.User;
 import com.aeon.ams.repo.MongoRepo;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
+
 
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -24,16 +22,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     }
 
+
     @Override
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.aeon.ams.model.User user = repo.findByUsername(username);
-        if(user != null){
-            Collection<GrantedAuthority> authorities = new ArrayList<>();
-            user.getRoles().forEach(roles -> {
-                authorities.add( new SimpleGrantedAuthority(roles.getRole()));
-            });
-            return new User(user.getUsername(), user.getPassword(), authorities );
-        }
-        throw new UsernameNotFoundException("Provided Credentials do not match");
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+           User user = repo.findByUsername(s);
+        System.out.println(user.toString());
+            if(user != null){
+                return new CustomUserDetails(user);
+            }
+            throw new UsernameNotFoundException("Provided Credentials do not match");
     }
 }

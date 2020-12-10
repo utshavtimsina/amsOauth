@@ -19,12 +19,14 @@ import java.util.List;
 public class User {
     @Id
     private String id;
+    @NotBlank
+    private String displayName;
     @NotBlank(message = "UserName is mandatory")
     private String username;
     @NotBlank(message = "Password is mandatory")
     private String password;
     private  boolean isActive = false;
     private  String activators;
-    private List<Roles> roles;
+    private List<String> roles;
 
 }

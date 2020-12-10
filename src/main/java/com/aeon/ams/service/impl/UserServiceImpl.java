@@ -39,10 +39,11 @@ public class UserServiceImpl implements UserService {
         System.out.print(s);
         User createUser = User.builder()
                 .username(user.getUsername())
+                .displayName(user.getDisplayName())
                 .password(passwordEncoder.encode(user.getPassword()))
                 .activators(s)
                 .isActive(false)
-                .roles(Arrays.asList( Roles.builder().role("STUDENT").build()))
+                .roles(Arrays.asList("STUDENT"))
                 .build();
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getUsername());

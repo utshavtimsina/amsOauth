@@ -2,11 +2,11 @@ package com.aeon.ams.config.auth;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,13 +15,21 @@ import java.util.Map;
  * </p>
  */
 public class CustomTokenConverter extends JwtAccessTokenConverter {
+    private final TokenStore tokenStore;
 
+    public CustomTokenConverter(TokenStore tokenStore) {
+        this.tokenStore = tokenStore;
+    }
 
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken,
                                      OAuth2Authentication authentication) {
         if(authentication.getOAuth2Request().getGrantType().equalsIgnoreCase("password")) {
             final Map<String, Object> additionalInfo = new HashMap<String, Object>();
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+//            Long userId = Long.valueOf(details.get("userId").toString());
+            additionalInfo.put("sid", userDetails.getUser().getId());
+            additionalInfo.put("authorities",userDetails.getUser().getRoles());
             ((DefaultOAuth2AccessToken) accessToken)
                     .setAdditionalInformation(additionalInfo);
         }
