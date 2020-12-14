@@ -1,4 +1,5 @@
 package com.aeon.ams.config.auth;
+import com.aeon.ams.model.User;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -28,8 +29,10 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
             final Map<String, Object> additionalInfo = new HashMap<String, Object>();
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 //            Long userId = Long.valueOf(details.get("userId").toString());
-            additionalInfo.put("sid", userDetails.getUser().getId());
-            additionalInfo.put("authorities",userDetails.getUser().getRoles());
+            User user =userDetails.getUser();
+            additionalInfo.put("sid", user.getId());
+            additionalInfo.put("name",user.getDisplayName());
+            additionalInfo.put("authorities",user.getRoles());
             ((DefaultOAuth2AccessToken) accessToken)
                     .setAdditionalInformation(additionalInfo);
         }
