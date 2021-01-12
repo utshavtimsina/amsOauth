@@ -21,22 +21,22 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<?> getAllUsers(){
-        return new ResponseEntity(new GlobalApiResponse(true,"success",userService.getAll(),false),HttpStatus.OK);
-    }
+//    @GetMapping("/getAll")
+//    public ResponseEntity<?> getAllUsers(){
+//        return new ResponseEntity(new GlobalApiResponse(true,"success",userService.getAll(),false),HttpStatus.OK);
+//    }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerNewStudent(@Valid @RequestBody User user) throws Exception {
         if(userService.createStudent(user)){
-            return new ResponseEntity(new GlobalApiResponse(true,"success",userService.createStudent(user),false),HttpStatus.OK);
+            return new ResponseEntity( userService.createStudent(user),HttpStatus.OK);
         }
        throw new Exception("Username Already exist");
     }
 
     @PostMapping("/activate/{id}")
     public ResponseEntity<?> activateUser(@PathVariable String id){
-        return new ResponseEntity(new GlobalApiResponse(true,"activation compleated",null,false),HttpStatus.OK);
+        return new ResponseEntity( "",HttpStatus.OK);
     }
 
 }
